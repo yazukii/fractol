@@ -6,54 +6,74 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 17:45:26 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/11/22 17:53:23 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/11/25 16:43:15 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../mlx/mlx.h"
-#include "../libft/libft.h"
-#include <unistd.h>
+#include "../headers/fractol.h"
 
-typedef struct s_data {
-	void	*img;
-	char	*addr;
-	int		bpp;
-	int		line_length;
-	int		endian;
-}	t_data;
-
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+int	main(int argc, char **argv)
 {
-	char	*dst;
-
-	dst = data->addr + (y * data->line_length + x * (data->bpp / 8));
-	*(unsigned int*)dst = color;
-}
-
-int	create_trgb(int t, int r, int g, int b)
-{
-	return (t << 24 | r << 16 | g << 8 | b);
-}
-
-int	main(void)
-{
-	void	*mlx;
-	void	*mlx_win;
-	int		x;
-	int		y;
-	int		trgb;
-	int		i;
-	int sw;
+	(void)argc;
+	w_data mlx;
+	unsigned long int		i = 0;
+	unsigned long int		x;
+	unsigned long int		y = 0;
+	double						resx = ft_atoi(argv[1]);
+	double						resy = ft_atoi(argv[2]);
+	t_complex				c;
+	t_complex				Z;
 	t_data	img;
-
-	x = 0;
-	sw = 0;
-	y = 1080 / 2;
-	mlx = mlx_init();
-	mlx_win = mlx_new_window(mlx, 1920, 1080, "fractol");
-	img.img = mlx_new_image(mlx, 1920, 1080);
+	double MinRe = -3.0;
+	double MaxRe = 3.0;
+	double MinIm = MinRe * (resy/resx);
+	double MaxIm = MinIm * -1;
+	double Re_fact;
+	double Im_fact;
+	double c_im;
+	double c_re;
+	double Z_re;
+	double Z_im;
+	double Z_re2;
+	double Z_im2;
+	
+	mlx.mlx = mlx_init();
+	mlx.win = mlx_new_window(mlx.mlx, resx, resy, "fractol");
+	img.img = mlx_new_image(mlx.mlx, resx, resy);
 	img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_length, &img.endian);
-	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
-	mlx_loop(mlx);
+	Re_fact = (MaxRe - MinRe) / (resx - 1);
+	Im_fact = (MaxIm - MinIm) / (resy - 1);
+	while (y < resy)
+	{
+		c_im = MaxIm - y * Im_fact;
+		while (x < resx)
+		{
+			c_re = MinRe + x * Re_fact;
+			Z_re = c_re; 
+			Z_im = c_im; // Set Z = c
+			while (i < 100)
+			{
+				Z_re2 = Z_re * Z_re;
+				Z_im2 = Z_im * Z_im;
+				if(Z_re2 + Z_im2 > 4)
+					break;
+				Z_im = 2 * Z_re * Z_im + c_im;
+				Z_re = Z_re2 - Z_im2 + c_re;
+				i++;
+			}
+			if (i < 40)
+				my_mlx_pixel_put(&img, x, y, create_trgb(0, 255, i * 10, 255));
+			else if (i < 80)
+				my_mlx_pixel_put(&img, x, y, create_trgb(0, i * 10, 255, 255));
+			else if (i < 101)
+				my_mlx_pixel_put(&img, x, y, create_trgb(0, 255, 255, i * 10));
+			x++;
+			i = 0;
+		}
+		x = 0;
+		y++;
+	}
+	mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 0, 0);
+	mlx_loop(mlx.mlx);
 	return (0);
 }
