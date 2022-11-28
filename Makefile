@@ -8,7 +8,8 @@ MLX_PATH = mlx
 MLX = libmlx.dylib
 
 SRC_FILES = main.c \
-			mlxfn.c
+			mlxfn.c \
+			zoom.c
 SRC_DIR = src/
 SRC = ${addprefix ${SRC_DIR}, ${SRC_FILES}}
 OBJ = ${SRC:.c=.o}

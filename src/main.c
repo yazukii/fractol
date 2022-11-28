@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 17:45:26 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/11/25 18:56:12 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/11/28 20:10:09 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,10 @@
 
 t_data	pixels(int x, int y, int i, t_data img)
 {
-	if (i < 40)
-		my_mlx_pixel_put(&img, x, y, create_trgb(0, 255, i * 10, 255));
-	else if (i < 80)
-		my_mlx_pixel_put(&img, x, y, create_trgb(0, i * 10, 255, 255));
-	else if (i < 101)
-		my_mlx_pixel_put(&img, x, y, create_trgb(0, 255, 255, i * 10));
+	if (i >= 100)
+		my_mlx_pixel_put(&img, x, y, create_trgb(0, 0, 0, 0));
+	else
+		my_mlx_pixel_put(&img, x, y, create_trgb(0, 200, i * 10, 200));
 	return (img);
 }
 
@@ -40,25 +38,22 @@ int	iter(t_complex z, t_complex c, int i)
 	return (i);
 }
 
-void	fractal(w_data mlx, t_res res, t_data p)
+void	fractal(w_data mlx)
 {
 	t_complex	c;
 	t_complex	z;
 	t_res		pos;
-	t_cplane	cp;
+	t_data		p;
 	int			i;
 
-	cp.MinRe = -2.5;
-	cp.MaxRe = 2.5;
-	cp.MinIm = cp.MinRe * (res.y / res.x);
-	p.img = mlx_new_image(mlx.mlx, 1920, 1080);
+	p.img = mlx_new_image(mlx.mlx, mlx.x, mlx.y);
 	p.addr = mlx_get_data_addr(p.img, &p.bpp, &p.line_length, &p.endian);
-	while (pos.y < res.y)
+	while (pos.y < mlx.y)
 	{
-		c.im = -cp.MinIm - pos.y * ((-cp.MinIm - cp.MinIm) / (res.y - 1));
-		while (pos.x < res.x)
+		c.im = -mlx.MinIm - pos.y * ((-mlx.MinIm - mlx.MinIm) / (mlx.y - 1));
+		while (pos.x < mlx.x)
 		{
-			c.re = cp.MinRe + pos.x * ((cp.MaxRe - cp.MinRe) / (res.x - 1));
+			c.re = mlx.MinRe + pos.x * ((mlx.MaxRe - mlx.MinRe) / (mlx.x - 1));
 			z = c;
 			i = iter(z, c, i);
 			p.img = pixels(pos.x, pos.y, i, p).img;
@@ -68,21 +63,32 @@ void	fractal(w_data mlx, t_res res, t_data p)
 		pos.x = 0;
 		pos.y++;
 	}
+	my_mlx_pixel_put(&p, 1920 / 2, 1080 / 2, create_trgb(0, 255, 0, 0));
 	mlx_put_image_to_window(mlx.mlx, mlx.win, p.img, 0, 0);
 }
 
 int	main(int argc, char **argv)
 {
-	w_data		mlx;
-	t_res		res;
-	t_data		img;
+	w_data		mlx;	
 
 	(void) argc;
-	res.x = ft_atoi(argv[1]);
-	res.y = ft_atoi(argv[2]);
-	mlx.mlx = mlx_init();
-	mlx.win = mlx_new_window(mlx.mlx, res.x, res.y, "fractol");
-	fractal(mlx, res, img);
-	mlx_loop(mlx.mlx);
+	int i;
+	i = 0;
+	while (i < 100)
+	{
+		mlx.MinRe = -2.5;
+		mlx.MaxRe = 2.5;
+		mlx.x = ft_atoi(argv[1]);
+		mlx.y = ft_atoi(argv[2]);
+		mlx.MinIm = -1.3;
+		mlx.MaxIm = 1.3;
+		mlx.mlx = mlx_init();
+		mlx.win = mlx_new_window(mlx.mlx, mlx.x, mlx.y, "fractol");
+		fractal(mlx);
+		mlx_mouse_hook(mlx.win, &zoom, &mlx);
+		mlx_key_hook(mlx.win, &hooks, &mlx);
+		mlx_hook(mlx.win, 17, 0L, &killwin, &mlx);
+		mlx_loop(mlx.mlx);
+	}
 	return (0);
 }
