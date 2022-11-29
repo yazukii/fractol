@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 17:45:26 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/11/28 20:10:09 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/11/29 13:33:19 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,14 @@
 
 t_data	pixels(int x, int y, int i, t_data img)
 {
-	if (i >= 100)
+	if (i >= MAX_ITER)
 		my_mlx_pixel_put(&img, x, y, create_trgb(0, 0, 0, 0));
+	else if (i < MAX_ITER / 3)
+		my_mlx_pixel_put(&img, x, y, create_trgb(0, i * (255 / (MAX_ITER / 3)), 50, 50));
+	else if (i < (MAX_ITER / 3) * 2)
+		my_mlx_pixel_put(&img, x, y, create_trgb(0, 255, i * (255 / (MAX_ITER / 3)), 50));
 	else
-		my_mlx_pixel_put(&img, x, y, create_trgb(0, 200, i * 10, 200));
+		my_mlx_pixel_put(&img, x, y, create_trgb(0, 255, 255, i * (255 / (MAX_ITER / 3))));
 	return (img);
 }
 
@@ -25,7 +29,7 @@ int	iter(t_complex z, t_complex c, int i)
 {
 	t_complex	z2;
 
-	while (i < 100)
+	while (i < MAX_ITER)
 	{
 		z2.re = z.re * z.re;
 		z2.im = z.im * z.im;
@@ -72,23 +76,18 @@ int	main(int argc, char **argv)
 	w_data		mlx;	
 
 	(void) argc;
-	int i;
-	i = 0;
-	while (i < 100)
-	{
-		mlx.MinRe = -2.5;
-		mlx.MaxRe = 2.5;
-		mlx.x = ft_atoi(argv[1]);
-		mlx.y = ft_atoi(argv[2]);
-		mlx.MinIm = -1.3;
-		mlx.MaxIm = 1.3;
-		mlx.mlx = mlx_init();
-		mlx.win = mlx_new_window(mlx.mlx, mlx.x, mlx.y, "fractol");
-		fractal(mlx);
-		mlx_mouse_hook(mlx.win, &zoom, &mlx);
-		mlx_key_hook(mlx.win, &hooks, &mlx);
-		mlx_hook(mlx.win, 17, 0L, &killwin, &mlx);
-		mlx_loop(mlx.mlx);
-	}
+	mlx.MinRe = -2.5;
+	mlx.MaxRe = 2.5;
+	mlx.x = ft_atoi(argv[1]);
+	mlx.y = ft_atoi(argv[2]);
+	mlx.MinIm = -1.3;
+	mlx.MaxIm = 1.3;
+	mlx.mlx = mlx_init();
+	mlx.win = mlx_new_window(mlx.mlx, mlx.x, mlx.y, "fractol");
+	fractal(mlx);
+	mlx_mouse_hook(mlx.win, &zoom, &mlx);
+	mlx_key_hook(mlx.win, &hooks, &mlx);
+	mlx_hook(mlx.win, 17, 0L, &killwin, &mlx);
+	mlx_loop(mlx.mlx);
 	return (0);
 }

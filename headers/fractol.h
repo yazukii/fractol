@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 16:26:19 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/11/28 20:10:24 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/11/29 13:34:02 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "../libft/libft.h"
 #include <unistd.h>
 #include <stdio.h>
+# define	MAX_ITER 42
 
 // STRUCTS
 
