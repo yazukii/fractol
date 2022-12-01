@@ -6,29 +6,38 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 17:45:26 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/11/29 13:33:19 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/01 19:23:43 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/fractol.h"
 
-t_data	pixels(int x, int y, int i, t_data img)
+t_imgd	pixels(t_res pos, int i, t_imgd img, t_complex z)
 {
-	if (i >= MAX_ITER)
-		my_mlx_pixel_put(&img, x, y, create_trgb(0, 0, 0, 0));
-	else if (i < MAX_ITER / 3)
-		my_mlx_pixel_put(&img, x, y, create_trgb(0, i * (255 / (MAX_ITER / 3)), 50, 50));
-	else if (i < (MAX_ITER / 3) * 2)
-		my_mlx_pixel_put(&img, x, y, create_trgb(0, 255, i * (255 / (MAX_ITER / 3)), 50));
+	static double prev;
+	double 	v;
+	double s;
+	double	L;
+	double C;
+	double H;
+	double	smooth;
+
+	s = (double)i / MAX_ITER;
+	v = 1.0 - powf(cos(M_PI * s), 2.0);
+	smooth = (i + 2 - log(log(z.re * z.re + z.im * z.im) / M_LN2) / M_LN2) / 42;\
+	if (i < MAX_ITER)
+		my_mlx_pixel_put(&img, pos.x, pos.y, create_trgb(0, 55, smooth * 255, 55));
 	else
-		my_mlx_pixel_put(&img, x, y, create_trgb(0, 255, 255, i * (255 / (MAX_ITER / 3))));
+		my_mlx_pixel_put(&img, pos.x, pos.y, create_trgb(0, 0, 0, 0));
 	return (img);
 }
 
-int	iter(t_complex z, t_complex c, int i)
+t_imgd	iter(t_complex z, t_complex c, t_res pos, t_imgd p)
 {
 	t_complex	z2;
+	int i;
 
+	i = 0;
 	while (i < MAX_ITER)
 	{
 		z2.re = z.re * z.re;
@@ -39,49 +48,47 @@ int	iter(t_complex z, t_complex c, int i)
 		z.re = z2.re - z2.im + c.re;
 		i++;
 	}
-	return (i);
+	p.img = pixels(pos, i, p, z).img;
+	return (p);
 }
 
-void	fractal(w_data mlx)
+void	fractal(t_data mlx)
 {
 	t_complex	c;
 	t_complex	z;
 	t_res		pos;
-	t_data		p;
+	t_imgd		p;
 	int			i;
 
 	p.img = mlx_new_image(mlx.mlx, mlx.x, mlx.y);
 	p.addr = mlx_get_data_addr(p.img, &p.bpp, &p.line_length, &p.endian);
 	while (pos.y < mlx.y)
 	{
-		c.im = -mlx.MinIm - pos.y * ((-mlx.MinIm - mlx.MinIm) / (mlx.y - 1));
+		c.im = mlx.minim - pos.y * ((mlx.minim - mlx.maxim) / (mlx.y - 1));
 		while (pos.x < mlx.x)
 		{
-			c.re = mlx.MinRe + pos.x * ((mlx.MaxRe - mlx.MinRe) / (mlx.x - 1));
+			c.re = mlx.minre + pos.x * ((mlx.maxre - mlx.minre) / (mlx.x - 1));
 			z = c;
-			i = iter(z, c, i);
-			p.img = pixels(pos.x, pos.y, i, p).img;
+			p.img = iter(z, c, pos, p).img;
 			pos.x++;
-			i = 0;
 		}
 		pos.x = 0;
 		pos.y++;
 	}
-	my_mlx_pixel_put(&p, 1920 / 2, 1080 / 2, create_trgb(0, 255, 0, 0));
 	mlx_put_image_to_window(mlx.mlx, mlx.win, p.img, 0, 0);
 }
 
 int	main(int argc, char **argv)
 {
-	w_data		mlx;	
+	t_data		mlx;	
 
 	(void) argc;
-	mlx.MinRe = -2.5;
-	mlx.MaxRe = 2.5;
+	mlx.minre = -2.5;
+	mlx.maxre = 2.5;
 	mlx.x = ft_atoi(argv[1]);
 	mlx.y = ft_atoi(argv[2]);
-	mlx.MinIm = -1.3;
-	mlx.MaxIm = 1.3;
+	mlx.minim = -1.3;
+	mlx.maxim = 1.3;
 	mlx.mlx = mlx_init();
 	mlx.win = mlx_new_window(mlx.mlx, mlx.x, mlx.y, "fractol");
 	fractal(mlx);

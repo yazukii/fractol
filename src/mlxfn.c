@@ -6,13 +6,13 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 16:28:38 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/11/28 16:13:16 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/01 16:35:12 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/fractol.h"
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+void	my_mlx_pixel_put(t_imgd *data, int x, int y, int color)
 {
 	char	*dst;
 

@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 12:48:42 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/11/29 13:56:18 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/01 16:37:07 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,57 +15,59 @@
 int	zoom(int button, int x, int y, void *param)
 {
 	t_cplane	cp;
-	w_data		*mlx;
-	double		range;
-	double		eps;
-
+	t_data		*mlx;
+	t_complex	rg;
+	t_complex	eps;
+	
 	mlx = param;
-	range = mlx->MinRe - mlx->MaxRe;
-	if (range < 0)
-		range *= -1;
-	eps = range / (mlx->x);
-	mlx->MinRe = (mlx->MinRe + (((double)x - 960) * eps)) * 0.95;
-	mlx->MaxRe = (mlx->MaxRe + (((double)x - 960) * eps)) * 0.95;
-	printf("%f\n", mlx->MinRe);
-	printf("%f\n", mlx->MaxRe);
-	mlx->MinIm *= 0.95;
-	mlx->MaxIm *= 0.95;
+	rg.re = mlx->maxre - mlx->minre;
+	rg.im = mlx->maxim - mlx->minim;
+	if (rg.re < 0)
+		rg.re *= -1;
+	if (rg.im < 0)
+		rg.im *= -1;
+	eps.re = rg.re / (mlx->x);
+	eps.im = rg.im / (mlx->y);
+	mlx->minre = (mlx->minre + (((double)x - 960) * eps.re)) + (rg.re / STEP);
+	mlx->maxre = (mlx->maxre + (((double)x - 960) * eps.re)) - (rg.re / STEP);
+	mlx->minim = (mlx->minim + (((double)y - 540) * eps.im)) + (rg.im / STEP);
+	mlx->maxim = (mlx->maxim + (((double)y - 540) * eps.im)) - (rg.im / STEP);
 	fractal(*mlx);
 	return (0);
 }
 
 void	pan(int dir, void *param)
 {
-	w_data	*mlx;
+	t_data	*mlx;
 
 	mlx = param;
-	if (dir == 1)
-	{
-		mlx->MinRe += (mlx->MaxRe / 100);
-		mlx->MaxRe += (mlx->MaxRe / 100);
-	}
 	if (dir == 2)
 	{
-		mlx->MinRe -= (mlx->MaxRe / 100);
-		mlx->MaxRe -= (mlx->MaxRe / 100);
+		mlx->minre += (mlx->maxre / STEP);
+		mlx->maxre += (mlx->maxre / STEP);
+	}
+	if (dir == 1)
+	{
+		mlx->minre -= (mlx->maxre / STEP);
+		mlx->maxre -= (mlx->maxre / STEP);
 	}
 	if (dir == 3)
 	{
-		mlx->MinIm += (mlx->MaxIm / 100);
-		mlx->MaxIm += (mlx->MaxIm / 100);
+		mlx->minim += (mlx->maxim / STEP);
+		mlx->maxim += (mlx->maxim / STEP);
 	}
 	if (dir == 4)
 	{
-		mlx->MinIm -= (mlx->MaxIm / 100);
-		mlx->MaxIm -= (mlx->MaxIm / 100);
+		mlx->minim -= (mlx->maxim / STEP);
+		mlx->maxim -= (mlx->maxim / STEP);
 	}
-	printf("%d\n", dir);
 	fractal(*mlx);
 }
 
 int	hooks(int keycode, void *param)
 {
-	w_data	*mlx;
+	t_data		*mlx;
+	t_complex	rg;
 
 	mlx = param;
 	if (keycode == 53)
@@ -74,6 +76,16 @@ int	hooks(int keycode, void *param)
 		mlx_clear_window(mlx->mlx, mlx->win);
 		exit (0);
 	}
+	if (keycode == 6)
+	{
+		rg.re = mlx->maxre - mlx->minre;
+		rg.im = mlx->maxim - mlx->minim;
+		mlx->minre += rg.re / 100;
+		mlx->maxre -= rg.re / 100;
+		mlx->minim += rg.im / 100;
+		mlx->maxim -= rg.im / 100;
+		fractal(*mlx);
+	}
 	if (keycode < 127 && keycode > 122)
 		pan(keycode - 122, mlx);
 	return (0);
@@ -81,7 +93,7 @@ int	hooks(int keycode, void *param)
 
 int	killwin(void *param)
 {
-	w_data	*mlx;
+	t_data	*mlx;
 
 	mlx = param;
 	mlx_destroy_image(mlx->mlx, mlx->win);
@@ -89,5 +101,3 @@ int	killwin(void *param)
 	exit (0);
 	return (0);
 }
-
-//TODO REGLER LE ZOOM PARCE QUE CA RETOURN TJRS AU CENTRE
