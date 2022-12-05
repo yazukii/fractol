@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 16:26:19 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/01 19:26:17 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/05 19:04:13 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include <stdio.h>
 # include <math.h>
 
-# define MAX_ITER 1000
-# define STEP 20
+# define MAX_ITER 100
+# define STEP 100
 
 // STRUCTS
 
@@ -61,15 +61,21 @@ typedef struct w_data {
 	double	maxim;
 	double	x;
 	double	y;
+	t_cplane	def;
 }	t_data;
 
 // FUNCTIONS
 
+t_imgd	pixels(t_res pos, int i, t_imgd img, t_complex z);
+t_imgd	jpixels(t_res pos, int i, t_imgd img);
+int		def(void *param);
 void	my_mlx_pixel_put(t_imgd *data, int x, int y, int color);
 int		create_trgb(int t, int r, int g, int b);
 int		zoom(int button, int x, int y, void *param);
-void	fractal(t_data mlx);
+void	mandelbrot(t_data mlx);
 int		hooks(int keycode, void *param);
 int		killwin(void *param);
+int		hook_mousemove(int button, int x, int y, void *param);
+void	julia(t_data mlx, int x, int y);
 
 #endif

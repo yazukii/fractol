@@ -9,7 +9,10 @@ MLX = libmlx.dylib
 
 SRC_FILES = main.c \
 			mlxfn.c \
-			zoom.c
+			zoom.c \
+			julia.c \
+			mandelbrot.c \
+			colors.c
 SRC_DIR = src/
 SRC = ${addprefix ${SRC_DIR}, ${SRC_FILES}}
 OBJ = ${SRC:.c=.o}
