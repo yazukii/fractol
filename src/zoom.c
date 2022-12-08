@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 12:48:42 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/05 17:42:11 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/08 17:06:51 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	zoomout(int x, int y, void *param)
 	t_data		*mlx;
 
 	mlx = param;
+	rg.re = mlx->maxre - mlx->minre;
 	rg.im = mlx->maxim - mlx->minim;
 	if (rg.re < 0)
 		rg.re *= -1;
@@ -31,7 +32,7 @@ int	zoomout(int x, int y, void *param)
 	mlx->maxre = (mlx->maxre + (((double)x - 960) * eps.re)) + (rg.re / STEP);
 	mlx->minim = (mlx->minim - (((double)y - 540) * eps.im)) - (rg.im / STEP);
 	mlx->maxim = (mlx->maxim - (((double)y - 540) * eps.im)) + (rg.im / STEP);
-	mandelbrot(*mlx);
+	callman(*mlx);
 	return (0);
 }
 
@@ -43,9 +44,7 @@ int	zoom(int button, int x, int y, void *param)
 	t_complex	eps;
 
 	mlx = param;
-	if (button == 5 && y >= 0)
-		zoomout(x, y, &mlx);
-	else if (button == 4 && y >= 0)
+	if (button == 4 && y >= 0)
 	{
 		rg.re = mlx->maxre - mlx->minre;
 		rg.im = mlx->maxim - mlx->minim;
@@ -59,9 +58,12 @@ int	zoom(int button, int x, int y, void *param)
 		mlx->maxre = (mlx->maxre + (((double)x - 960) * eps.re)) - (rg.re / STEP);
 		mlx->minim = (mlx->minim - (((double)y - 540) * eps.im)) + (rg.im / STEP);
 		mlx->maxim = (mlx->maxim - (((double)y - 540) * eps.im)) - (rg.im / STEP);
-		mandelbrot(*mlx);
+		callman(*mlx);
 	}
-	printf("in");
+	else if (button == 5 && y >= 0)
+		zoomout(x, y, mlx);
+	//mlx_mouse_move(mlx->win, mlx->x / 2, mlx->y / 2);
+	//TODO this lol
 	return (0);
 }
 
@@ -90,7 +92,7 @@ void	pan(int dir, void *param)
 		mlx->minim -= (mlx->maxim / STEP);
 		mlx->maxim -= (mlx->maxim / STEP);
 	}
-	mandelbrot(*mlx);
+	callman(*mlx);
 }
 
 int	hooks(int keycode, void *param)
@@ -115,7 +117,7 @@ int	hooks(int keycode, void *param)
 		mlx->maxre -= rg.re / STEP;
 		mlx->minim += rg.im / STEP;
 		mlx->maxim -= rg.im / STEP;
-		mandelbrot(*mlx);
+		callman(*mlx);
 	}
 	if (keycode == 15)
 	{

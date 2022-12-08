@@ -18,7 +18,7 @@ SRC = ${addprefix ${SRC_DIR}, ${SRC_FILES}}
 OBJ = ${SRC:.c=.o}
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -pg -g
 AR = ar -rcs
 
 %.o: %.c

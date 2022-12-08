@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 12:01:17 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/05 13:34:59 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/07 14:42:42 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_imgd	iterj(t_complex c, t_res pos, t_imgd p, t_complex j)
 		c.re = z2.re - z2.im + j.re;
 		i++;
 	}
-	p.img = jpixels(pos, i, p).img;
+	p.img = pixels(pos, i, p).img;
 	return (p);
 }
 

@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 16:26:19 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/05 19:04:13 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/08 17:59:51 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <math.h>
 
 # define MAX_ITER 100
-# define STEP 100
+# define STEP 20
 
 // STRUCTS
 
@@ -30,10 +30,16 @@ typedef struct s_complex
 	double		im;
 }	t_complex;
 
+typedef struct s_pixel
+{
+	t_complex	c;
+	int			i;
+}	t_pixel;
+
 typedef struct s_res
 {
-	double		x;
-	double		y;
+	int		x;
+	int		y;
 }	t_res;
 
 typedef struct s_plane
@@ -59,20 +65,21 @@ typedef struct w_data {
 	double	minre;
 	double	minim;
 	double	maxim;
-	double	x;
-	double	y;
+	int	x;
+	int	y;
+	t_imgd	p;
 	t_cplane	def;
 }	t_data;
 
 // FUNCTIONS
 
-t_imgd	pixels(t_res pos, int i, t_imgd img, t_complex z);
-t_imgd	jpixels(t_res pos, int i, t_imgd img);
+t_imgd	pixels(t_res pos, int i, t_imgd img);
 int		def(void *param);
 void	my_mlx_pixel_put(t_imgd *data, int x, int y, int color);
 int		create_trgb(int t, int r, int g, int b);
 int		zoom(int button, int x, int y, void *param);
-void	mandelbrot(t_data mlx);
+t_pixel	mandelbrot(int x, int y, t_data mlx);
+int		callman(t_data mlx);
 int		hooks(int keycode, void *param);
 int		killwin(void *param);
 int		hook_mousemove(int button, int x, int y, void *param);
