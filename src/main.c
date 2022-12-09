@@ -6,26 +6,27 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 17:45:26 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/08 17:51:51 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/09 17:36:09 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/fractol.h"
 
-int	setdef(void *param)
+void	setdef(void *param)
 {
 	t_data	*mlx;
+	double	rg;
 
+	rg = (4 + 3) / (double)1920;
 	mlx = param;
-	mlx->def.minre = -2.5;
-	mlx->def.maxre = 2.5;
-	mlx->def.minim = -1.3;
-	mlx->def.maxim = 1.3;
+	mlx->def.minre = -4;
+	mlx->def.maxre = 3;
+	mlx->def.minim = -((rg / 2) * 1080);
+	mlx->def.maxim = (rg / 2) * 1080;
 	mlx->minre = mlx->def.minre;
 	mlx->maxre = mlx->def.maxre;
 	mlx->minim = mlx->def.minim;
 	mlx->maxim = mlx->def.maxim;
-	return (0);
 }
 
 int	die(char *reason)
@@ -39,36 +40,45 @@ int	def(void *param)
 	t_data *mlx;
 
 	mlx = param;
+	mlx->mlx = mlx_init();
+	mlx->win = mlx_new_window(mlx->mlx, mlx->x, mlx->y, "fractol");
+	mlx->img = mlx_new_image(mlx->mlx, mlx->x, mlx->y);
+	mlx->addr = mlx_get_data_addr(mlx->img, &mlx->bpp, &mlx->line_length, &mlx->endian);
 	mlx->minre = mlx->def.minre;
 	mlx->maxre = mlx->def.maxre;
 	mlx->minim = mlx->def.minim;
 	mlx->maxim = mlx->def.maxim;
-	callman(*mlx);
+	call(mlx);
 	return (0);
 }
 
-int	callman(t_data mlx)
+int	call(t_data *mlx)
 {
-	t_pixel	f;
-	t_res	pos;
-	t_imgd	p;
+	clock_t begin = clock();
+	int i;
+	int thnum;
 
-	pos.x = 0;
-	pos.y = 0;
-	p.img = mlx_new_image(mlx.mlx, mlx.x, mlx.y);
-	p.addr = mlx_get_data_addr(p.img, &p.bpp, &p.line_length, &p.endian);
-	while (pos.y < mlx.y)
+	i = 0;
+	mlx->t = i;
+	thnum = 4;
+	pthread_t th[thnum];
+	while (i < thnum)
 	{
-		while (pos.x < mlx.x)
-		{
-			f = mandelbrot(pos.x, pos.y, mlx);
-			p.img = pixels(pos, f.i, p).img;
-			pos.x++;
-		}
-		pos.x = 0;
-		pos.y++;
+		pthread_create(&th[i], NULL, &mandelbrot, (void*)mlx);
+		i++;
+		printf("%d\n", i);
+		mlx->t = i; 
 	}
-	mlx_put_image_to_window(mlx.mlx, mlx.win, p.img, 0, 0);
+	i = 0;
+	while (i < thnum)
+	{
+		pthread_join(th[i], NULL);
+		i++;
+		printf("%d\n", i);
+	}
+	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
+	clock_t end = clock();
+	printf("%f\n", (double)(end - begin) / CLOCKS_PER_SEC);
 	return (0);
 }
 
@@ -76,25 +86,16 @@ int	main(int argc, char **argv)
 {
 	t_data		mlx;
 
-	setdef(&mlx);
-	if (argc <= 3)
+	if (argc <= 2)
 		return (die("error: Not enough arguments"));
 	mlx.x = ft_atoi(argv[1]);
 	mlx.y = ft_atoi(argv[2]);
-	mlx.mlx = mlx_init();
-	mlx.win = mlx_new_window(mlx.mlx, mlx.x, mlx.y, "fractol");
-	if (argv[3][0] == 'j')
-	{
-		julia(mlx, 661, 613);
-		mlx_mouse_hook(mlx.win, hook_mousemove, &mlx);
-	}
-	else
-	{
-		callman(mlx);
-		mlx_mouse_hook(mlx.win, &zoom, &mlx);
-	}
-	mlx_key_hook(mlx.win, &hooks, &mlx);
-	//mlx_hook(mlx.win, 17, 0L, &killwin, &mlx);
+	setdef(&mlx);
+	def(&mlx);
+	mlx_mouse_hook(mlx.win, &zoom, &mlx);
+	mlx_hook(mlx.win, 2, 1L<<2, &hooks, &mlx);
+	//mlx_key_hook(mlx.win, &hooks, &mlx);
+	mlx_hook(mlx.win, 17, 0L, &killwin, &mlx);
 	mlx_loop(mlx.mlx);
 	return (0);
 }

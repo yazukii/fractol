@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 16:26:19 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/08 17:59:51 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/09 17:10:17 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <math.h>
+# include <pthread.h>
+# include <time.h>
 
 # define MAX_ITER 100
 # define STEP 20
@@ -51,36 +53,43 @@ typedef struct s_plane
 }	t_cplane;
 
 typedef struct s_data {
-	void	*img;
-	char	*addr;
-	int		bpp;
-	int		line_length;
-	int		endian;
 }	t_imgd;
 
 typedef struct w_data {
-	void	*mlx;
-	void	*win;
-	double	maxre;
-	double	minre;
-	double	minim;
-	double	maxim;
-	int	x;
-	int	y;
-	t_imgd	p;
+	void		*mlx;
+	void		*win;
+	double		maxre;
+	double		minre;
+	double		minim;
+	double		maxim;
+	double		re;
+	double		im;
+	int			i;
+	int			x;
+	int			y;
+	int			t;
+	int			px;
+	int			py;
+	void		*img;
+	char		*addr;
+	int			bpp;
+	int			line_length;
+	int			endian;
+	t_imgd		p;
 	t_cplane	def;
 }	t_data;
 
 // FUNCTIONS
 
-t_imgd	pixels(t_res pos, int i, t_imgd img);
+void	pixels(int x, int y, t_data *mlx);
 int		def(void *param);
-void	my_mlx_pixel_put(t_imgd *data, int x, int y, int color);
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 int		create_trgb(int t, int r, int g, int b);
 int		zoom(int button, int x, int y, void *param);
-t_pixel	mandelbrot(int x, int y, t_data mlx);
-int		callman(t_data mlx);
-int		hooks(int keycode, void *param);
+void	mandelbrot(void *param);
+int		call(t_data *mlx);
+void	setdef(void *param);
+int		hooks(int key, void *param);
 int		killwin(void *param);
 int		hook_mousemove(int button, int x, int y, void *param);
 void	julia(t_data mlx, int x, int y);

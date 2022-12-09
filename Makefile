@@ -10,7 +10,6 @@ MLX = libmlx.dylib
 SRC_FILES = main.c \
 			mlxfn.c \
 			zoom.c \
-			julia.c \
 			mandelbrot.c \
 			colors.c
 SRC_DIR = src/

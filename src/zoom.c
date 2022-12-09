@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 12:48:42 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/08 17:06:51 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/09 16:26:47 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	zoomout(int x, int y, void *param)
 	mlx->maxre = (mlx->maxre + (((double)x - 960) * eps.re)) + (rg.re / STEP);
 	mlx->minim = (mlx->minim - (((double)y - 540) * eps.im)) - (rg.im / STEP);
 	mlx->maxim = (mlx->maxim - (((double)y - 540) * eps.im)) + (rg.im / STEP);
-	callman(*mlx);
+	call(mlx);
 	return (0);
 }
 
@@ -54,11 +54,17 @@ int	zoom(int button, int x, int y, void *param)
 			rg.im *= -1;
 		eps.re = rg.re / (mlx->x);
 		eps.im = rg.im / (mlx->y);
+		/*
 		mlx->minre = (mlx->minre + (((double)x - 960) * eps.re)) + (rg.re / STEP);
 		mlx->maxre = (mlx->maxre + (((double)x - 960) * eps.re)) - (rg.re / STEP);
-		mlx->minim = (mlx->minim - (((double)y - 540) * eps.im)) + (rg.im / STEP);
-		mlx->maxim = (mlx->maxim - (((double)y - 540) * eps.im)) - (rg.im / STEP);
-		callman(*mlx);
+		mlx->minim = (mlx->minim + (((double)y - 540) * eps.im)) + (rg.im / STEP);
+		mlx->maxim = (mlx->maxim + (((double)y - 540) * eps.im)) - (rg.im / STEP);
+		*/
+		mlx->minre = mlx->minre + (rg.re / STEP);
+		mlx->maxre = mlx->maxre - (rg.re / STEP);
+		mlx->minim = mlx->minim + (rg.im / STEP);
+		mlx->maxim = mlx->maxim - (rg.im / STEP);
+		call(mlx);
 	}
 	else if (button == 5 && y >= 0)
 		zoomout(x, y, mlx);
@@ -82,17 +88,17 @@ void	pan(int dir, void *param)
 		mlx->minre -= (mlx->maxre / STEP);
 		mlx->maxre -= (mlx->maxre / STEP);
 	}
-	if (dir == 3)
+	if (dir == 4)
 	{
 		mlx->minim += (mlx->maxim / STEP);
 		mlx->maxim += (mlx->maxim / STEP);
 	}
-	if (dir == 4)
+	if (dir == 3)
 	{
 		mlx->minim -= (mlx->maxim / STEP);
 		mlx->maxim -= (mlx->maxim / STEP);
 	}
-	callman(*mlx);
+	call(mlx);
 }
 
 int	hooks(int keycode, void *param)
@@ -102,7 +108,10 @@ int	hooks(int keycode, void *param)
 
 	mlx = param;
 	if (keycode == 15)
-		def(mlx);
+	{
+		setdef(mlx);
+		call(mlx);
+	}
 	if (keycode == 53)
 	{
 		mlx_destroy_image(mlx->mlx, mlx->win);
@@ -117,7 +126,7 @@ int	hooks(int keycode, void *param)
 		mlx->maxre -= rg.re / STEP;
 		mlx->minim += rg.im / STEP;
 		mlx->maxim -= rg.im / STEP;
-		callman(*mlx);
+		call(mlx);
 	}
 	if (keycode == 15)
 	{
@@ -137,5 +146,4 @@ int	killwin(void *param)
 	mlx_destroy_image(mlx->mlx, mlx->win);
 	mlx_clear_window(mlx->mlx, mlx->win);
 	exit (0);
-	return (0);
 }

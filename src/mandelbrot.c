@@ -6,14 +6,11 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 13:22:25 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/08 18:00:42 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/09 17:34:50 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/fractol.h"
-
-int ib;
-ib = 0;
 
 t_complex	screen_to_complex(int x, int y, t_data mlx)
 {
@@ -24,29 +21,52 @@ t_complex	screen_to_complex(int x, int y, t_data mlx)
 	return (p);
 }
 
-t_pixel	mandelbrot(int x, int y, t_data mlx)
+void	mandelbrot_calc(t_data *mlx)
 {
 	t_complex	c;
 	t_complex	z;
-	t_complex tmp;
-	int			i;
+	t_complex	z2;
 
-	z = screen_to_complex(x, y, mlx);
-	c = screen_to_complex(x, y, mlx);
-	i = 0;
-	while (pow(z.re, 2) + pow(z.im, 2) < 4 && i < MAX_ITER)
+	z.re = mlx->re;
+	z.im = mlx->im;
+	mlx->i = 0;
+	
+	while (mlx->i < MAX_ITER)
 	{
-		tmp.re = pow(z.re, 2) - pow(z.im, 2) + c.re;
-		tmp.im = z.re * z.im * 2 + c.im;
-		if (z.re == tmp.re && z.im == tmp.im)
-		{
-			i = MAX_ITER;
-			break;
-		}
-		z.re = tmp.re;
-		z.im = tmp.im;
-		i++;
+		z2.re = z.re * z.re;
+		z2.im = z.im * z.im;
+		if(z2.re + z2.im > 4)
+			break ;
+		z.im = 2 * z.re * z.im + mlx->im;
+		z.re = z2.re - z2.im + mlx->re;
+		mlx->i += 1;
 	}
+	pixels(mlx->px, mlx->py, mlx);
 	//printf("%d\n", ib++);
-	return((t_pixel){.c = z, .i = i});
+}
+
+void	mandelbrot(void *param)
+{
+	t_data	*mlx;
+
+	mlx = param;
+	mlx->px = 0;
+	mlx->py = mlx->t;
+	//printf("%d\n", mlx->t);
+	clock_t begin = clock();
+	while (mlx->py < mlx->y)
+	{
+		mlx->im = (mlx->maxim - (mlx->py) * ((mlx->maxim - mlx->minim) / (mlx->y - 1)));
+		while (mlx->px < mlx->x)
+		{
+			mlx->re = (mlx->minre + (mlx->px) * ((mlx->maxre - mlx->minre) / (mlx->x - 1)));
+			mandelbrot_calc(mlx);
+			mlx->px += 1;
+		}
+		mlx->px = 0;
+		mlx->py += 4;
+	}
+	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
+	clock_t end = clock();
+	printf("%f\n", (double)(end - begin) / CLOCKS_PER_SEC);
 }

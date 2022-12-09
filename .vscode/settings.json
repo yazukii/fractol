@@ -3,6 +3,7 @@
 		"mlx.h": "c",
 		"libft.h": "c",
 		"unistd.h": "c",
-		"fractol.h": "c"
+		"fractol.h": "c",
+		"complex": "c"
 	}
 }
