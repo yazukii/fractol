@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 17:45:26 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/09 17:36:09 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/15 14:02:30 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,25 +60,24 @@ int	call(t_data *mlx)
 
 	i = 0;
 	mlx->t = i;
-	thnum = 4;
+	thnum = 2;
 	pthread_t th[thnum];
 	while (i < thnum)
 	{
-		pthread_create(&th[i], NULL, &mandelbrot, (void*)mlx);
+		//printf("%d\n", mlx->t);
+		pthread_create(&th[i], NULL, &mandelbrot, mlx);
 		i++;
-		printf("%d\n", i);
-		mlx->t = i; 
 	}
 	i = 0;
 	while (i < thnum)
 	{
 		pthread_join(th[i], NULL);
 		i++;
-		printf("%d\n", i);
+		//printf("%d\n", i);
 	}
 	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
 	clock_t end = clock();
-	printf("%f\n", (double)(end - begin) / CLOCKS_PER_SEC);
+	//printf("%f\n", (double)(end - begin) / CLOCKS_PER_SEC);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 16:26:19 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/09 17:10:17 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/15 13:37:51 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int		def(void *param);
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 int		create_trgb(int t, int r, int g, int b);
 int		zoom(int button, int x, int y, void *param);
-void	mandelbrot(void *param);
+void	*mandelbrot(void *param);
 int		call(t_data *mlx);
 void	setdef(void *param);
 int		hooks(int key, void *param);
