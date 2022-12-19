@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 17:45:26 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/15 14:02:30 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/19 16:58:18 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,35 +48,19 @@ int	def(void *param)
 	mlx->maxre = mlx->def.maxre;
 	mlx->minim = mlx->def.minim;
 	mlx->maxim = mlx->def.maxim;
+	mlx->r = 9;
+	mlx->g = 15;
+	mlx->b = 8.5;
 	call(mlx);
 	return (0);
 }
 
 int	call(t_data *mlx)
 {
-	clock_t begin = clock();
-	int i;
-	int thnum;
+	static int	sw;
 
-	i = 0;
-	mlx->t = i;
-	thnum = 2;
-	pthread_t th[thnum];
-	while (i < thnum)
-	{
-		//printf("%d\n", mlx->t);
-		pthread_create(&th[i], NULL, &mandelbrot, mlx);
-		i++;
-	}
-	i = 0;
-	while (i < thnum)
-	{
-		pthread_join(th[i], NULL);
-		i++;
-		//printf("%d\n", i);
-	}
+	mandelbrot(mlx);
 	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
-	clock_t end = clock();
 	//printf("%f\n", (double)(end - begin) / CLOCKS_PER_SEC);
 	return (0);
 }
@@ -93,7 +77,7 @@ int	main(int argc, char **argv)
 	def(&mlx);
 	mlx_mouse_hook(mlx.win, &zoom, &mlx);
 	mlx_hook(mlx.win, 2, 1L<<2, &hooks, &mlx);
-	//mlx_key_hook(mlx.win, &hooks, &mlx);
+	mlx_key_hook(mlx.win, &hooks, &mlx);
 	mlx_hook(mlx.win, 17, 0L, &killwin, &mlx);
 	mlx_loop(mlx.mlx);
 	return (0);

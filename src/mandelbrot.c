@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 13:22:25 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/15 14:03:44 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/19 16:38:02 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,18 +42,15 @@ void	mandelbrot_calc(t_data *mlx)
 		mlx->i += 1;
 	}
 	pixels(mlx->px, mlx->py, mlx);
-	//printf("%d\n", ib++);
 }
 
 void	*mandelbrot(void *param)
 {
 	t_data	*mlx;
-	static int	f;
 
 	mlx = param;
-	printf("X\n");
 	mlx->px = 0;
-	clock_t begin = clock();
+	mlx->py = 0;
 	while (mlx->py < mlx->y)
 	{
 		mlx->im = (mlx->maxim - (mlx->py) * ((mlx->maxim - mlx->minim) / (mlx->y - 1)));
@@ -67,7 +64,5 @@ void	*mandelbrot(void *param)
 		mlx->py += 1;
 	}
 	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
-	clock_t end = clock();
-	printf("%f\n", (double)(end - begin) / CLOCKS_PER_SEC);
 	return (param);
 }

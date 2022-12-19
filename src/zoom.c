@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 12:48:42 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/09 16:26:47 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/19 17:01:05 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,14 +90,16 @@ void	pan(int dir, void *param)
 	}
 	if (dir == 4)
 	{
-		mlx->minim += (mlx->maxim / STEP);
-		mlx->maxim += (mlx->maxim / STEP);
+		
+		//mlx->minim += (mlx->maxim / STEP);
+		//mlx->maxim += (mlx->maxim / STEP);
 	}
 	if (dir == 3)
 	{
 		mlx->minim -= (mlx->maxim / STEP);
 		mlx->maxim -= (mlx->maxim / STEP);
 	}
+	//printf("%d\n", dir);
 	call(mlx);
 }
 
@@ -132,6 +134,10 @@ int	hooks(int keycode, void *param)
 	{
 		mlx->minre = -2.5;
 		mlx->maxre = 2.5;
+	}
+	if (keycode == 126)
+	{
+		mlx->b += 0.5;
 	}
 	if (keycode < 127 && keycode > 122)
 		pan(keycode - 122, mlx);

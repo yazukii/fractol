@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 16:26:19 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/15 13:37:51 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/19 16:56:21 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <pthread.h>
 # include <time.h>
 
-# define MAX_ITER 100
+# define MAX_ITER 50
 # define STEP 20
 
 // STRUCTS
@@ -72,6 +72,9 @@ typedef struct w_data {
 	int			py;
 	void		*img;
 	char		*addr;
+	double			r;
+	double			g;
+	double			b;
 	int			bpp;
 	int			line_length;
 	int			endian;
@@ -87,11 +90,11 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 int		create_trgb(int t, int r, int g, int b);
 int		zoom(int button, int x, int y, void *param);
 void	*mandelbrot(void *param);
+void	julia(t_data mlx);
 int		call(t_data *mlx);
 void	setdef(void *param);
 int		hooks(int key, void *param);
 int		killwin(void *param);
 int		hook_mousemove(int button, int x, int y, void *param);
-void	julia(t_data mlx, int x, int y);
 
 #endif

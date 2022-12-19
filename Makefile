@@ -11,7 +11,7 @@ SRC_FILES = main.c \
 			mlxfn.c \
 			zoom.c \
 			mandelbrot.c \
-			colors.c
+			colors.c 
 SRC_DIR = src/
 SRC = ${addprefix ${SRC_DIR}, ${SRC_FILES}}
 OBJ = ${SRC:.c=.o}
