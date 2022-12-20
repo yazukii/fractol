@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 16:26:19 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/19 16:56:21 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/20 13:33:08 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,14 @@ typedef struct w_data {
 	int			t;
 	int			px;
 	int			py;
+	int			sw;
 	void		*img;
 	char		*addr;
 	double			r;
 	double			g;
 	double			b;
 	int			bpp;
-	int			line_length;
+	int			l_l;
 	int			endian;
 	t_imgd		p;
 	t_cplane	def;
@@ -90,7 +91,7 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 int		create_trgb(int t, int r, int g, int b);
 int		zoom(int button, int x, int y, void *param);
 void	*mandelbrot(void *param);
-void	julia(t_data mlx);
+void	julia(void *param, int x, int y);
 int		call(t_data *mlx);
 void	setdef(void *param);
 int		hooks(int key, void *param);

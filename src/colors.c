@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 13:25:49 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/19 16:54:31 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/20 12:43:18 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@ void	pixels(int x, int y, t_data *mlx)
 	int			r;
 	int			g;
 	int			b;
-	double		t = (double)mlx->i / MAX_ITER;
+	double		t;
 
+	t = (double)mlx->i / MAX_ITER;
 	r = (int)(mlx->r * (1 - t) * pow(t, 3) * 220);
 	g = (int)(mlx->g * pow((1 - t), 2) * pow(t, 2) * 255);
 	b = (int)(mlx->b * pow((1 - t), 3) * t * 255);

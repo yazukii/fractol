@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 12:48:42 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/19 17:01:05 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/20 13:13:36 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,6 @@ int	zoom(int button, int x, int y, void *param)
 			rg.im *= -1;
 		eps.re = rg.re / (mlx->x);
 		eps.im = rg.im / (mlx->y);
-		/*
-		mlx->minre = (mlx->minre + (((double)x - 960) * eps.re)) + (rg.re / STEP);
-		mlx->maxre = (mlx->maxre + (((double)x - 960) * eps.re)) - (rg.re / STEP);
-		mlx->minim = (mlx->minim + (((double)y - 540) * eps.im)) + (rg.im / STEP);
-		mlx->maxim = (mlx->maxim + (((double)y - 540) * eps.im)) - (rg.im / STEP);
-		*/
 		mlx->minre = mlx->minre + (rg.re / STEP);
 		mlx->maxre = mlx->maxre - (rg.re / STEP);
 		mlx->minim = mlx->minim + (rg.im / STEP);
@@ -68,8 +62,6 @@ int	zoom(int button, int x, int y, void *param)
 	}
 	else if (button == 5 && y >= 0)
 		zoomout(x, y, mlx);
-	//mlx_mouse_move(mlx->win, mlx->x / 2, mlx->y / 2);
-	//TODO this lol
 	return (0);
 }
 
@@ -90,16 +82,14 @@ void	pan(int dir, void *param)
 	}
 	if (dir == 4)
 	{
-		
-		//mlx->minim += (mlx->maxim / STEP);
-		//mlx->maxim += (mlx->maxim / STEP);
+		mlx->minim += (mlx->maxim / STEP);
+		mlx->maxim += (mlx->maxim / STEP);
 	}
 	if (dir == 3)
 	{
 		mlx->minim -= (mlx->maxim / STEP);
 		mlx->maxim -= (mlx->maxim / STEP);
 	}
-	//printf("%d\n", dir);
 	call(mlx);
 }
 
@@ -115,30 +105,9 @@ int	hooks(int keycode, void *param)
 		call(mlx);
 	}
 	if (keycode == 53)
-	{
-		mlx_destroy_image(mlx->mlx, mlx->win);
-		mlx_clear_window(mlx->mlx, mlx->win);
-		exit (0);
-	}
+		killwin(mlx);
 	if (keycode == 6)
-	{
-		rg.re = mlx->maxre - mlx->minre;
-		rg.im = mlx->maxim - mlx->minim;
-		mlx->minre += rg.re / STEP;
-		mlx->maxre -= rg.re / STEP;
-		mlx->minim += rg.im / STEP;
-		mlx->maxim -= rg.im / STEP;
-		call(mlx);
-	}
-	if (keycode == 15)
-	{
-		mlx->minre = -2.5;
-		mlx->maxre = 2.5;
-	}
-	if (keycode == 126)
-	{
-		mlx->b += 0.5;
-	}
+		zoom(4, 1, 1, mlx);
 	if (keycode < 127 && keycode > 122)
 		pan(keycode - 122, mlx);
 	return (0);
@@ -153,3 +122,9 @@ int	killwin(void *param)
 	mlx_clear_window(mlx->mlx, mlx->win);
 	exit (0);
 }
+/*
+mlx->minre = (mlx->minre + (((double)x - 960) * eps.re)) + (rg.re / STEP);
+mlx->maxre = (mlx->maxre + (((double)x - 960) * eps.re)) - (rg.re / STEP);
+mlx->minim = (mlx->minim + (((double)y - 540) * eps.im)) + (rg.im / STEP);
+mlx->maxim = (mlx->maxim + (((double)y - 540) * eps.im)) - (rg.im / STEP);
+*/

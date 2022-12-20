@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 17:45:26 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/19 16:58:18 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/20 14:00:42 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@ void	setdef(void *param)
 	mlx->maxre = mlx->def.maxre;
 	mlx->minim = mlx->def.minim;
 	mlx->maxim = mlx->def.maxim;
+	mlx->r = 9;
+	mlx->g = 15;
+	mlx->b = 8.5;
 }
 
 int	die(char *reason)
@@ -37,31 +40,29 @@ int	die(char *reason)
 
 int	def(void *param)
 {
-	t_data *mlx;
+	t_data	*mlx;
 
 	mlx = param;
 	mlx->mlx = mlx_init();
 	mlx->win = mlx_new_window(mlx->mlx, mlx->x, mlx->y, "fractol");
 	mlx->img = mlx_new_image(mlx->mlx, mlx->x, mlx->y);
-	mlx->addr = mlx_get_data_addr(mlx->img, &mlx->bpp, &mlx->line_length, &mlx->endian);
+	mlx->addr = mlx_get_data_addr(mlx->img, &mlx->bpp, &mlx->l_l, &mlx->endian);
 	mlx->minre = mlx->def.minre;
 	mlx->maxre = mlx->def.maxre;
 	mlx->minim = mlx->def.minim;
 	mlx->maxim = mlx->def.maxim;
-	mlx->r = 9;
-	mlx->g = 15;
-	mlx->b = 8.5;
 	call(mlx);
 	return (0);
 }
 
 int	call(t_data *mlx)
 {
-	static int	sw;
-
-	mandelbrot(mlx);
+	if (mlx->sw == 0)
+		mandelbrot(mlx);
+	else if (mlx->sw == 1)
+		julia(mlx, 661, 613 );
 	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
-	//printf("%f\n", (double)(end - begin) / CLOCKS_PER_SEC);
+	printf("minre: %f, maxre: %f, minim: %f, maxim: %f\n", mlx->minre, mlx->maxre, mlx->minim, mlx->maxim);
 	return (0);
 }
 
@@ -73,10 +74,14 @@ int	main(int argc, char **argv)
 		return (die("error: Not enough arguments"));
 	mlx.x = ft_atoi(argv[1]);
 	mlx.y = ft_atoi(argv[2]);
+	if (argv[3][0] == 'm')
+		mlx.sw = 0;
+	if (argv[3][0] == 'j')
+		mlx.sw = 1;
 	setdef(&mlx);
 	def(&mlx);
 	mlx_mouse_hook(mlx.win, &zoom, &mlx);
-	mlx_hook(mlx.win, 2, 1L<<2, &hooks, &mlx);
+	mlx_hook(mlx.win, 2, 1L << 2, &hooks, &mlx);
 	mlx_key_hook(mlx.win, &hooks, &mlx);
 	mlx_hook(mlx.win, 17, 0L, &killwin, &mlx);
 	mlx_loop(mlx.mlx);
