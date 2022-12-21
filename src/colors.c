@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 13:25:49 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/20 12:43:18 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/21 13:49:49 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	pixels(int x, int y, t_data *mlx)
 	b = (int)(mlx->b * pow((1 - t), 3) * t * 255);
 	//printf("%d, %d\n", x, y);
 	//printf("%d, %d, %d\n", r, g, b);
-	if (x < 1920 && y < 1080)
+	if (x < mlx->x && y < mlx->y)
 	{
 		if (mlx->i < MAX_ITER)
 			my_mlx_pixel_put(mlx, x, y, create_trgb(0, r, g, b));

@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 16:26:19 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/20 13:33:08 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/21 17:24:55 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ typedef struct w_data {
 	double		im;
 	int			i;
 	int			x;
+	double		cy;
+	double		cx;
 	int			y;
 	int			t;
 	int			px;
@@ -89,7 +91,7 @@ void	pixels(int x, int y, t_data *mlx);
 int		def(void *param);
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 int		create_trgb(int t, int r, int g, int b);
-int		zoom(int button, int x, int y, void *param);
+int		mouse_hooks(int button, int x, int y, void *param);
 void	*mandelbrot(void *param);
 void	julia(void *param, int x, int y);
 int		call(t_data *mlx);

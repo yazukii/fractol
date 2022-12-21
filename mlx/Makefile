@@ -17,7 +17,7 @@ INC=-I.
 all: $(NAME)
 
 $(NAME): $(MODULE_OBJ) $(OBJ) $(C_OBJ)
-	swiftc $(INC) -o $(NAME) -emit-library $(OBJ) $(C_OBJ) -lz
+	swiftc $(INC) -o $(NAME) -emit-library  $(OBJ) $(C_OBJ) -lz
 
 
 

@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 12:01:17 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/20 13:33:32 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/21 18:02:22 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	julia(void *param, int x, int y)
 		rgim = mlx->maxim - mlx->minim;
 		mlx->im = (mlx->maxim - (mlx->py) * ((rgim) / (mlx->y - 1)));
 		j.im = mlx->minim - y * ((mlx->minim - mlx->maxim) / (mlx->y - 1));
+		printf("%f\n", j.im);
 		while (mlx->px < mlx->x)
 		{
 			rgre = mlx->maxre - mlx->minre;
@@ -62,3 +63,4 @@ void	julia(void *param, int x, int y)
 	}
 	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
 }
+//TODO pan with j.im and j.re
