@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 16:26:19 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/21 17:24:55 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/22 19:37:01 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,10 @@ typedef struct w_data {
 	double		maxim;
 	double		re;
 	double		im;
+	int			start_x;
+	int			start_y;
+	int			end_x;
+	int			end_y;
 	int			i;
 	int			x;
 	double		cy;
@@ -81,6 +85,7 @@ typedef struct w_data {
 	int			bpp;
 	int			l_l;
 	int			endian;
+	t_complex	j;
 	t_imgd		p;
 	t_cplane	def;
 }	t_data;
@@ -93,11 +98,15 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 int		create_trgb(int t, int r, int g, int b);
 int		mouse_hooks(int button, int x, int y, void *param);
 void	*mandelbrot(void *param);
-void	julia(void *param, int x, int y);
+void	julia(void *param, double x, double y);
 int		call(t_data *mlx);
 void	setdef(void *param);
 int		hooks(int key, void *param);
 int		killwin(void *param);
 int		hook_mousemove(int button, int x, int y, void *param);
+int		zoomout(int x, int y, void *param);
+int		zoom(int x, int y, void *param);
+void	pan(int dir, void *param);
+void	shift_julia(int dir, void *param);
 
 #endif

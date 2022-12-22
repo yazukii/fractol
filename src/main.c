@@ -6,7 +6,7 @@
 /*   By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 17:45:26 by yidouiss          #+#    #+#             */
-/*   Updated: 2022/12/21 17:24:34 by yidouiss         ###   ########.fr       */
+/*   Updated: 2022/12/22 20:01:30 by yidouiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,63 +58,35 @@ int	def(void *param)
 }
 
 int	call(t_data *mlx)
-{
+{	
 	if (mlx->sw == 0)
 		mandelbrot(mlx);
 	else if (mlx->sw == 1)
 		julia(mlx, mlx->cx, mlx->cy);
 	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
-	//printf("minre: %f, maxre: %f, minim: %f, maxim: %f\n", mlx->minre, mlx->maxre, mlx->minim, mlx->maxim);
 	return (0);
-}
-
-double str_to_float(char *arr)
-{
-	int		i,j,flag;
-	double	val;
-	char	c;
-
-	i = 0;
-	j = 0;
-	val = 0;
-	flag = 0;
-	while ((c = *(arr + i)) != '\0')
-	{
-		if (c != '.')
-		{
-			val = (val * 10) + (c - '0');
-			if (flag == 1)
-				j--;
-		}
-		if (c == '.')
-		{ 
-			if (flag == 1) 
-				return 0; 
-			flag = 1;
-		}
-		i++;
-	}
-	val = val * pow(10, j);
-	return val;
 }
 
 int	main(int argc, char **argv)
 {
 	t_data		mlx;
 
-	if (argc <= 2)
-		return (die("error: Not enough arguments"));
+	if (argc <= 3)
+	{
+		ft_putstr("usage: ./fractol [julia: x] [julia: y] [fractal]");
+		return (0);
+	}
 	if (argv[3][0] == 'm')
 		mlx.sw = 0;
 	if (argv[3][0] == 'j')
 		mlx.sw = 1;
-	mlx.cx = str_to_float(argv[1]);
-	mlx.cy = str_to_float(argv[2]);
+	mlx.cx = ft_stod(argv[1]);
+	mlx.cy = ft_stod(argv[2]);
 	printf("a: %f, b: %f\n", mlx.cx, mlx.cy);
 	setdef(&mlx);
 	def(&mlx);
 	mlx_mouse_hook(mlx.win, &mouse_hooks, &mlx);
-	mlx_hook(mlx.win, 2, 1L << 2, &hooks, &mlx);
+	mlx_hook(mlx.win, 2, 1L << 0, &hooks, &mlx);
 	mlx_key_hook(mlx.win, &hooks, &mlx);
 	mlx_hook(mlx.win, 17, 0L, &killwin, &mlx);
 	mlx_loop(mlx.mlx);

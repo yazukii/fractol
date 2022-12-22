@@ -6,7 +6,7 @@
 #    By: yidouiss <yidouiss@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/14 15:22:23 by yidouiss          #+#    #+#              #
-#    Updated: 2022/10/26 15:48:02 by yidouiss         ###   ########.fr        #
+#    Updated: 2022/12/22 14:51:27 by yidouiss         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,8 @@ SRC = ft_atoi.c \
 		ft_putchar.c \
 		ft_putstr.c \
 		ft_strrev.c \
-		ft_intlen.c
+		ft_intlen.c \
+		ft_stod.c
 
 SRC_BONUS = ft_lstnew.c \
 			ft_lstadd_front.c \
